@@ -46,7 +46,7 @@
     <div class="card" id="inputCard">
         <h2>1. Khai báo Bài toán & Mã nguồn</h2>
         <label>Đề bài / Mô tả ngắn:</label>
-        <input type="text" id="taskDesc" placeholder="Ví dụ: Kiểm tra số nguyên tố, điều kiện rẽ nhánh...">
+        <input type="text" id="taskDesc" placeholder="Ví dụ: Tính giai thừa...">
         
         <label>Đoạn mã nguồn hoàn chỉnh (C/C++, Python...):</label>
         <textarea id="sourceCode" placeholder="Dán đoạn code của bạn vào đây..."></textarea>
@@ -57,7 +57,7 @@
     <!-- BƯỚC 2: THỰC THI THÁCH THỨC -->
     <div class="card" id="challengeCard" style="display: none;">
         <h2>2. Thách thức Thực chứng Tự chủ</h2>
-        <p style="color: var(--text-muted); font-size: 0.9rem;">Giữ nguyên lệnh đơn bên ngoài, đục thủng trọn gói các khối cấu trúc và logic bên trong:</p>
+        <p style="color: var(--text-muted); font-size: 0.9rem;">Hệ thống giữ nguyên hàm main và lệnh đơn, đục thủng toàn bộ khối vòng lặp/rẽ nhánh bên trong:</p>
         
         <div class="code-box" id="displayCodeArea"></div>
 
@@ -93,21 +93,22 @@
 
         originalSnippets = [];
         
+        // Cải tiến Regex: bắt linh hoạt mọi khoảng trắng giữa từ khóa và dấu mở ngoặc đơn
         let maskedCode = code
-            // 1. Cấu trúc do-while (đục toàn bộ từ do đến while(...);)
-            .replace(/\bdo\s*\{([^}]*)\}\s*while\s*\((.*?)\)\s*;/gs, (match) => {
+            // 1. Cấu trúc do-while
+            .replace(/\bdo\s*\{([^}]*)\}\s*while\s*\([\s\S]*?\)\s*;/gs, (match) => {
                 let fullBlock = match.trim();
                 originalSnippets.push(fullBlock);
-                return `<input type="text" class="missing-input" placeholder="[Tự gõ lại toàn bộ khối do-while]">`;
+                return `<input type="text" class="missing-input" placeholder="[Tự gõ lại cấu trúc do-while]">`;
             })
-            // 2. Cấu trúc switch-case (đục trọn gói từ switch đến hết các case bên trong)
-            .replace(/\bswitch\s*\((.*?)\)\s*\{([^}]*)\}/gs, (match) => {
+            // 2. Cấu trúc switch-case
+            .replace(/\bswitch\s*\([\s\S]*?\)\s*\{([^}]*)\}/gs, (match) => {
                 let fullBlock = match.trim();
                 originalSnippets.push(fullBlock);
-                return `<input type="text" class="missing-input" placeholder="[Tự gõ lại cấu trúc switch-case và các case]">`;
+                return `<input type="text" class="missing-input" placeholder="[Tự gõ lại cấu trúc switch-case]">`;
             })
             // 3. Cấu trúc try-catch
-            .replace(/\btry\s*\{([^}]*)\}\s*catch\s*\(.*?\)\s*\{([^}]*)\}/gs, (match) => {
+            .replace(/\btry\s*\{([^}]*)\}\s*catch\s*\([\s\S]*?\)\s*\{([^}]*)\}/gs, (match) => {
                 let fullBlock = match.trim();
                 originalSnippets.push(fullBlock);
                 return `<input type="text" class="missing-input" placeholder="[Tự gõ lại cấu trúc try-catch]">`;
@@ -118,11 +119,11 @@
                 originalSnippets.push(fullBlock);
                 return `<input type="text" class="missing-input" placeholder="[Tự gõ lại khối lệnh else]">`;
             })
-            // 5. Các khối rẽ nhánh và lặp phổ biến: for, while, if, else if (đục từ từ khóa qua điều kiện đến trọn nội dung bên trong)
-            .replace(/\b(else\s+if|for|while|if)\s*\((?:[^)(]+\vert{}\((?:[^)(]+\vert{}\([^)(]*\))*\))*\)\s*\{([^}]*)\}/gs, (match) => {
+            // 5. Vòng lặp for, while, và rẽ nhánh if, else if (bắt trọn gói cả từ khóa, điều kiện và ngoặc nhọn bên trong)
+            .replace(/\b(else\s+if|for|while|if)\s*\([\s\S]*?\)\s*\{([^}]*)\}/gs, (match) => {
                 let fullBlock = match.trim();
                 originalSnippets.push(fullBlock);
-                return `<input type="text" class="missing-input" placeholder="[Tự gõ lại cấu trúc và logic bên trong]">`;
+                return `<input type="text" class="missing-input" placeholder="[Tự gõ lại vòng lặp và logic bên trong]">`;
             });
 
         document.getElementById('displayCodeArea').innerHTML = maskedCode;
