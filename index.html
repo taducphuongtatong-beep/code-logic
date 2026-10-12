@@ -46,7 +46,7 @@
     <div class="card" id="inputCard">
         <h2>1. Khai báo Bài toán & Mã nguồn</h2>
         <label>Đề bài / Mô tả ngắn:</label>
-        <input type="text" id="taskDesc" placeholder="Ví dụ: Tính giai thừa...">
+        <input type="text" id="taskDesc" placeholder="Ví dụ: Tính giai thừa với vòng lặp for...">
         
         <label>Đoạn mã nguồn hoàn chỉnh (C/C++, Python...):</label>
         <textarea id="sourceCode" placeholder="Dán đoạn code của bạn vào đây..."></textarea>
@@ -57,7 +57,7 @@
     <!-- BƯỚC 2: THỰC THI THÁCH THỨC -->
     <div class="card" id="challengeCard" style="display: none;">
         <h2>2. Thách thức Thực chứng Tự chủ</h2>
-        <p style="color: var(--text-muted); font-size: 0.9rem;">Hệ thống giữ nguyên hàm main và lệnh đơn bên ngoài, chỉ đục thủng khối vòng lặp/rẽ nhánh bên trong:</p>
+        <p style="color: var(--text-muted); font-size: 0.9rem;">Hệ thống giữ nguyên hàm main tuyệt đối, chỉ đục thủng vòng lặp/rẽ nhánh bên trong:</p>
         
         <div class="code-box" id="displayCodeArea"></div>
 
@@ -93,7 +93,7 @@
 
         originalSnippets = [];
         
-        // CHỈ quét các cấu trúc điều khiển (for, while, if, else, switch, try-catch, do-while), hoàn toàn không quét hàm main
+        // Sử dụng regex định danh chính xác các từ khóa cấu trúc điều khiển, bắt buộc đi kèm từ khóa cụ thể ở đầu (trừ tuyệt đối chữ main)
         let maskedCode = code
             // 1. Cấu trúc do-while
             .replace(/\bdo\s*\{([^}]*)\}\s*while\s*\((.*?)\)\s*;/gs, (match) => {
@@ -119,11 +119,11 @@
                 originalSnippets.push(fullBlock);
                 return `<input type="text" class="missing-input" placeholder="[Tự gõ lại khối lệnh else]">`;
             })
-            // 5. Vòng lặp for, while, và rẽ nhánh if, else if
-            .replace(/\b(else\s+if|for|while|if)\s*\(.*?\)\s*\{([^}]*)\}/gs, (match) => {
+            // 5. Vòng lặp và rẽ nhánh rõ ràng (chỉ bắt đúng for, while, if, else if, tuyệt đối không khớp với main)
+            .replace(/\b(else\s+if|for|while|if)\s*\((?:[^)(]+\vert{}\((?:[^)(]+\vert{}\([^)(]*\))*\))*\)\s*\{([^}]*)\}/gs, (match) => {
                 let fullBlock = match.trim();
                 originalSnippets.push(fullBlock);
-                return `<input type="text" class="missing-input" placeholder="[Tự gõ lại cấu trúc vòng lặp và logic bên trong]">`;
+                return `<input type="text" class="missing-input" placeholder="[Tự gõ lại vòng lặp và logic bên trong]">`;
             });
 
         document.getElementById('displayCodeArea').innerHTML = maskedCode;
