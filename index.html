@@ -112,7 +112,7 @@
             }).join('\n');
         }
 
-        document.getElementById('displayCodeArea').innerHTML = `<pre style="margin:0;">${escapeHtml(maskedCode)}</pre>`;
+       document.getElementById('displayCodeArea').innerHTML = `<pre style="margin:0;">${maskedCode}</pre>`;
         document.getElementById('inputCard').style.display = 'none';
         document.getElementById('challengeCard').style.display = 'block';
     }
