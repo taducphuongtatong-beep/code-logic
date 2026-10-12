@@ -26,9 +26,9 @@
         textarea { height: 120px; resize: vertical; }
         .btn { background: var(--primary); color: #0f172a; border: none; padding: 12px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; width: 100%; font-size: 1rem; transition: 0.2s; }
         .btn:hover { background: var(--primary-hover); }
-        .code-box { background: #0b0f19; padding: 20px; border-radius: 8px; font-family: monospace; line-height: 1.8; overflow-x: auto; border: 1px solid var(--border-color); }
-        .missing-input { background: #1e293b; border: 1px dashed var(--primary); color: var(--success); padding: 4px 8px; border-radius: 4px; font-family: monospace; font-size: 1rem; width: 150px; text-align: center; display: inline-block; }
-        .missing-input:focus { outline: none; border-color: var(--success); background: #0f172a; }
+        .code-box { background: #0b0f19; padding: 20px; border-radius: 8px; font-family: monospace; line-height: 1.8; overflow-x: auto; border: 1px solid var(--border-color); white-space: pre-wrap; }
+        .missing-input { background: #0f172a; border: 1px dashed var(--primary); color: var(--success); padding: 4px 8px; border-radius: 4px; font-family: monospace; font-size: 1rem; width: 180px; text-align: center; display: inline-block; }
+        .missing-input:focus { outline: none; border-color: var(--success); background: #1e293b; }
         #resultArea { display: none; margin-top: 20px; padding: 20px; border-radius: 8px; text-align: center; }
         .success-box { background: rgba(74, 222, 128, 0.1); border: 1px solid var(--success); color: var(--success); }
         .danger-box { background: rgba(248, 113, 113, 0.1); border: 1px solid var(--danger); color: var(--danger); }
@@ -112,7 +112,7 @@
             }).join('\n');
         }
 
-       document.getElementById('displayCodeArea').innerHTML = `<pre style="margin:0;">${maskedCode}</pre>`;
+        document.getElementById('displayCodeArea').innerHTML = maskedCode;
         document.getElementById('inputCard').style.display = 'none';
         document.getElementById('challengeCard').style.display = 'block';
     }
@@ -136,16 +136,12 @@
         if(filledCount === inputs.length && inputs.length > 0) {
             resultArea.className = "card success-box";
             resultTitle.innerText = "XÁC THỰC THÀNH CÔNG (VERIFIED SELF-THOUGHT CODE)";
-            resultMessage.innerText = "Tuyệt vời! Sinh viên Tạ Đức Phương đã tự tay tái tạo các mắt xích logic cốt lõi. Hệ thống xác nhận bạn đóng vai trò 'Chủ thể nhận thức' làm chủ hoàn toàn mã nguồn.";
+            resultMessage.innerText = "Tuyệt vời! Người dùng đã tự tay tái tạo các mắt xích logic cốt lõi. Hệ thống xác nhận bạn đóng vai trò 'Chủ thể nhận thức' làm chủ hoàn toàn mã nguồn.";
         } else {
             resultArea.className = "card danger-box";
             resultTitle.innerText = "CẢNH BÁO: NGUY CƠ LỆ THUỘC AI";
-            resultMessage.innerText = "Bạn chưa hoàn thành việc khôi phục các khoảng trống logic. Điều này cho thấy sự phụ thuộc hình thức vào công cụ mà chưa nắm vững bản chất bên trong.";
+            resultMessage.innerText = "Chưa hoàn thành việc khôi phục các khoảng trống logic. Điều này phản ánh sự phụ thuộc hình thức vào công cụ mà chưa nắm vững bản chất bên trong.";
         }
-    }
-
-    function escapeHtml(text) {
-        return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
     }
 </script>
 
