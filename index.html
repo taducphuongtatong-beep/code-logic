@@ -46,18 +46,18 @@
     <div class="card" id="inputCard">
         <h2>1. Khai báo Bài toán & Mã nguồn</h2>
         <label>Đề bài / Mô tả ngắn:</label>
-        <input type="text" id="taskDesc" placeholder="Ví dụ: Viết hàm tính tổng, cấu trúc điều kiện...">
+        <input type="text" id="taskDesc" placeholder="Ví dụ: Tính giai thừa với vòng lặp for...">
         
         <label>Đoạn mã nguồn hoàn chỉnh (C/C++, Python...):</label>
-        <textarea id="sourceCode" placeholder="Dán đoạn code Nhập môn Lập trình của bạn vào đây..."></textarea>
+        <textarea id="sourceCode" placeholder="Dán đoạn code của bạn vào đây..."></textarea>
 
-        <button class="btn" onclick="generateChallenge()">Khởi tạo Thách thức Tái tạo Hoàn toàn</button>
+        <button class="btn" onclick="generateChallenge()">Khởi tạo Thách thức Tái tạo Cấu trúc</button>
     </div>
 
     <!-- BƯỚC 2: THỰC THI THÁCH THỨC -->
     <div class="card" id="challengeCard" style="display: none;">
         <h2>2. Thách thức Thực chứng Tự chủ</h2>
-        <p style="color: var(--text-muted); font-size: 0.9rem;">Hệ thống đã đục thủng toàn bộ các cấu trúc lập trình cơ bản. Hãy tự tay gõ lại chính xác:</p>
+        <p style="color: var(--text-muted); font-size: 0.9rem;">Hệ thống đã đục thủng các khối cấu trúc lập trình cốt lõi, giữ nguyên lệnh đơn bên ngoài. Hãy tự tay gõ lại chính xác:</p>
         
         <div class="code-box" id="displayCodeArea"></div>
 
@@ -93,7 +93,7 @@
 
         originalSnippets = [];
         
-        // Quét và đục thủng toàn bộ cấu trúc Nhập môn Lập trình
+        // Chỉ đục các cấu trúc lớn (chứa khối lệnh bên trong), giữ nguyên lệnh scanf/printf đơn lẻ bên ngoài
         let maskedCode = code
             // 1. Cấu trúc do-while
             .replace(/\bdo\s*\{([^}]*)\}\s*while\s*\((.*?)\)\s*;/gs, (match) => {
@@ -119,17 +119,17 @@
                 originalSnippets.push(fullBlock);
                 return `<input type="text" class="missing-input" placeholder="[Tự gõ lại khối lệnh else]">`;
             })
-            // 5. Định nghĩa hàm cơ bản (Ví dụ: int sum(int a, int b) { ... })
+            // 5. Định nghĩa hàm cơ bản
             .replace(/\b(int|float|double|char|long|void|bool)\s+[a-zA-Z0-9_]+\s*\(.*?\)\s*\{([^}]*)\}/gs, (match) => {
                 let fullBlock = match.trim();
                 originalSnippets.push(fullBlock);
                 return `<input type="text" class="missing-input" placeholder="[Tự gõ lại định nghĩa hàm]">`;
             })
-            // 6. Các cấu trúc rẽ nhánh/lặp cơ bản (for, while, if, else if)
+            // 6. Vòng lặp for, while, và rẽ nhánh if, else if (bao gồm cả printf/scanf nằm bên trong khối lệnh của chúng)
             .replace(/\b(else\s+if|for|while|if)\s*\(.*?\)\s*\{([^}]*)\}/gs, (match) => {
                 let fullBlock = match.trim();
                 originalSnippets.push(fullBlock);
-                return `<input type="text" class="missing-input" placeholder="[Tự gõ lại từ khóa và khối lệnh]">`;
+                return `<input type="text" class="missing-input" placeholder="[Tự gõ lại cấu trúc và logic bên trong]">`;
             });
 
         document.getElementById('displayCodeArea').innerHTML = maskedCode;
