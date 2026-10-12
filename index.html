@@ -23,11 +23,11 @@
         .card { background: var(--card-bg); border-radius: 12px; padding: 25px; margin-bottom: 20px; border: 1px solid var(--border-color); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
         label { display: block; margin-bottom: 8px; font-weight: 600; color: var(--primary); }
         textarea, input[type="text"] { width: 100%; background: #0f172a; border: 1px solid var(--border-color); color: #fff; padding: 12px; border-radius: 8px; font-family: monospace; font-size: 0.95rem; margin-bottom: 15px; }
-        textarea { height: 120px; resize: vertical; }
+        textarea { height: 150px; resize: vertical; }
         .btn { background: var(--primary); color: #0f172a; border: none; padding: 12px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; width: 100%; font-size: 1rem; transition: 0.2s; }
         .btn:hover { background: var(--primary-hover); }
         .code-box { background: #0b0f19; padding: 20px; border-radius: 8px; font-family: monospace; line-height: 1.8; overflow-x: auto; border: 1px solid var(--border-color); white-space: pre-wrap; }
-        .missing-input { background: #0f172a; border: 1px dashed var(--primary); color: var(--success); padding: 6px 10px; border-radius: 4px; font-family: monospace; font-size: 1rem; width: 80%; text-align: left; display: inline-block; margin: 4px 0; }
+        .missing-input { background: #0f172a; border: 1px dashed var(--primary); color: var(--success); padding: 8px 12px; border-radius: 6px; font-family: monospace; font-size: 0.95rem; width: 95%; text-align: left; display: inline-block; margin: 6px 0; }
         .missing-input:focus { outline: none; border-color: var(--success); background: #1e293b; }
         #resultArea { display: none; margin-top: 20px; padding: 20px; border-radius: 8px; text-align: center; }
         .success-box { background: rgba(74, 222, 128, 0.1); border: 1px solid var(--success); color: var(--success); }
@@ -46,18 +46,18 @@
     <div class="card" id="inputCard">
         <h2>1. Khai báo Bài toán & Mã nguồn</h2>
         <label>Đề bài / Mô tả ngắn:</label>
-        <input type="text" id="taskDesc" placeholder="Ví dụ: Tính tổng các số chẵn trong mảng...">
+        <input type="text" id="taskDesc" placeholder="Ví dụ: Viết hàm tính tổng, cấu trúc điều kiện...">
         
         <label>Đoạn mã nguồn hoàn chỉnh (C/C++, Python...):</label>
-        <textarea id="sourceCode" placeholder="Dán đoạn code của bạn vào đây..."></textarea>
+        <textarea id="sourceCode" placeholder="Dán đoạn code Nhập môn Lập trình của bạn vào đây..."></textarea>
 
-        <button class="btn" onclick="generateChallenge()">Khởi tạo Thách thức Đục lỗ Logic</button>
+        <button class="btn" onclick="generateChallenge()">Khởi tạo Thách thức Tái tạo Hoàn toàn</button>
     </div>
 
     <!-- BƯỚC 2: THỰC THI THÁCH THỨC -->
     <div class="card" id="challengeCard" style="display: none;">
         <h2>2. Thách thức Thực chứng Tự chủ</h2>
-        <p style="color: var(--text-muted); font-size: 0.9rem;">Hệ thống đã ẩn đi các mắt xích logic cốt lõi. Hãy điền lại chính xác để chứng minh bạn làm chủ đoạn code này:</p>
+        <p style="color: var(--text-muted); font-size: 0.9rem;">Hệ thống đã đục thủng toàn bộ các cấu trúc lập trình cơ bản. Hãy tự tay gõ lại chính xác:</p>
         
         <div class="code-box" id="displayCodeArea"></div>
 
@@ -80,7 +80,6 @@
 <script>
     let originalSnippets = [];
 
-    // Hàm chuẩn hóa chuỗi để so sánh linh hoạt (bỏ bớt khoảng trắng thừa)
     function cleanString(str) {
         return str.replace(/\s+/g, '').trim();
     }
@@ -94,35 +93,44 @@
 
         originalSnippets = [];
         
-        // Nhận diện vòng lặp for, while và câu điều kiện if
+        // Quét và đục thủng toàn bộ cấu trúc Nhập môn Lập trình
         let maskedCode = code
-            .replace(/(for\s*\(.*?\))/g, (match) => {
-                originalSnippets.push(match);
-                return `<input type="text" class="missing-input" placeholder="[điền lại vòng lặp for]">`;
+            // 1. Cấu trúc do-while
+            .replace(/\bdo\s*\{([^}]*)\}\s*while\s*\((.*?)\)\s*;/gs, (match) => {
+                let fullBlock = match.trim();
+                originalSnippets.push(fullBlock);
+                return `<input type="text" class="missing-input" placeholder="[Tự gõ lại cấu trúc do-while]">`;
             })
-            .replace(/(while\s*\(.*?\))/g, (match) => {
-                originalSnippets.push(match);
-                return `<input type="text" class="missing-input" placeholder="[điền lại vòng lặp while]">`;
+            // 2. Cấu trúc switch-case
+            .replace(/\bswitch\s*\((.*?)\)\s*\{([^}]*)\}/gs, (match) => {
+                let fullBlock = match.trim();
+                originalSnippets.push(fullBlock);
+                return `<input type="text" class="missing-input" placeholder="[Tự gõ lại cấu trúc switch-case]">`;
             })
-            .replace(/(if\s*\(.*?\))/g, (match) => {
-                originalSnippets.push(match);
-                return `<input type="text" class="missing-input" placeholder="[điền lại điều kiện if]">`;
+            // 3. Cấu trúc try-catch
+            .replace(/\btry\s*\{([^}]*)\}\s*catch\s*\(.*?\)\s*\{([^}]*)\}/gs, (match) => {
+                let fullBlock = match.trim();
+                originalSnippets.push(fullBlock);
+                return `<input type="text" class="missing-input" placeholder="[Tự gõ lại cấu trúc try-catch]">`;
+            })
+            // 4. Khối lệnh else đơn lẻ
+            .replace(/\belse\s*\{([^}]*)\}/gs, (match) => {
+                let fullBlock = match.trim();
+                originalSnippets.push(fullBlock);
+                return `<input type="text" class="missing-input" placeholder="[Tự gõ lại khối lệnh else]">`;
+            })
+            // 5. Định nghĩa hàm cơ bản (Ví dụ: int sum(int a, int b) { ... })
+            .replace(/\b(int|float|double|char|long|void|bool)\s+[a-zA-Z0-9_]+\s*\(.*?\)\s*\{([^}]*)\}/gs, (match) => {
+                let fullBlock = match.trim();
+                originalSnippets.push(fullBlock);
+                return `<input type="text" class="missing-input" placeholder="[Tự gõ lại định nghĩa hàm]">`;
+            })
+            // 6. Các cấu trúc rẽ nhánh/lặp cơ bản (for, while, if, else if)
+            .replace(/\b(else\s+if|for|while|if)\s*\(.*?\)\s*\{([^}]*)\}/gs, (match) => {
+                let fullBlock = match.trim();
+                originalSnippets.push(fullBlock);
+                return `<input type="text" class="missing-input" placeholder="[Tự gõ lại từ khóa và khối lệnh]">`;
             });
-
-        // Nếu không có cấu trúc trên, tự động đục lỗ gán biến đơn giản
-        if(originalSnippets.length === 0) {
-            let lines = code.split('\n');
-            maskedCode = lines.map(line => {
-                if(line.includes(';') && line.length > 5) {
-                    let parts = line.split('=');
-                    if(parts.length > 1) {
-                        originalSnippets.push(parts[1].trim().replace(';', ''));
-                        return parts[0] + "= <input type='text' class='missing-input' placeholder='[điền biểu thức logic]'>;";
-                    }
-                }
-                return line;
-            }).join('\n');
-        }
 
         document.getElementById('displayCodeArea').innerHTML = maskedCode;
         document.getElementById('inputCard').style.display = 'none';
@@ -139,7 +147,6 @@
             let userVal = cleanString(input.value);
             let expectedVal = cleanString(originalSnippets[index] || "");
 
-            // So sánh chuỗi người dùng nhập với đáp án gốc
             if(userVal !== expectedVal) {
                 isAllCorrect = false;
                 input.style.borderColor = "var(--danger)";
@@ -157,11 +164,11 @@
         if(isAllCorrect) {
             resultArea.className = "card success-box";
             resultTitle.innerText = "XÁC THỰC THÀNH CÔNG (VERIFIED SELF-THOUGHT CODE)";
-            resultMessage.innerText = "Tuyệt vời! Bạn đã tự tay tái tạo chính xác 100% các mắt xích logic cốt lõi. Hệ thống xác nhận bạn đóng vai trò 'Chủ thể nhận thức' làm chủ hoàn toàn mã nguồn.";
+            resultMessage.innerText = "Tuyệt vời! Bạn đã tự tay tái tạo chính xác 100% cấu trúc logic từ gốc. Hệ thống xác nhận bạn làm chủ hoàn toàn mã nguồn.";
         } else {
             resultArea.className = "card danger-box";
             resultTitle.innerText = "XÁC THỰC THẤT BẠI: NGUY CƠ LỆ THUỘC AI";
-            resultMessage.innerText = "Cú pháp hoặc logic tái tạo chưa chính xác so với mã nguồn gốc (ô nhập bị khoanh đỏ). Hãy kiểm tra lại cấu trúc điều kiện/vòng lặp để chứng minh năng lực tự chủ!";
+            resultMessage.innerText = "Cấu trúc tái tạo chưa chính xác so với mã nguồn gốc (ô nhập bị khoanh đỏ). Hãy kiểm tra lại từng ký tự từ khóa và biểu thức!";
         }
     }
 </script>
