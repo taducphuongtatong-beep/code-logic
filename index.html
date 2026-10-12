@@ -57,7 +57,7 @@
     <!-- BƯỚC 2: THỰC THI THÁCH THỨC -->
     <div class="card" id="challengeCard" style="display: none;">
         <h2>2. Thách thức Thực chứng Tự chủ</h2>
-        <p style="color: var(--text-muted); font-size: 0.9rem;">Hệ thống đã giữ nguyên hàm main và lệnh scanf/printf, chỉ đục thủng các khối cấu trúc logic bên trong. Hãy tự tay gõ lại chính xác:</p>
+        <p style="color: var(--text-muted); font-size: 0.9rem;">Hệ thống giữ nguyên hàm main và lệnh đơn, chỉ đục thủng các khối cấu trúc lặp/rẽ nhánh bên trong. Hãy tự tay gõ lại chính xác:</p>
         
         <div class="code-box" id="displayCodeArea"></div>
 
@@ -93,7 +93,7 @@
 
         originalSnippets = [];
         
-        // Chỉ đục các khối cấu trúc rẽ nhánh/lặp bên trong, tuyệt đối không đụng đến hàm main hay lệnh đơn lẻ
+        // CHỈ đục các khối cấu trúc bên trong (for, while, if, else, switch, try-catch), giữ nguyên hoàn toàn hàm main và lệnh đơn bên ngoài
         let maskedCode = code
             // 1. Cấu trúc do-while
             .replace(/\bdo\s*\{([^}]*)\}\s*while\s*\((.*?)\)\s*;/gs, (match) => {
@@ -105,7 +105,7 @@
             .replace(/\bswitch\s*\((.*?)\)\s*\{([^}]*)\}/gs, (match) => {
                 let fullBlock = match.trim();
                 originalSnippets.push(fullBlock);
-                return `<input type="text" class="missing-input" placeholder="[Tự gox lại cấu trúc switch-case]">`;
+                return `<input type="text" class="missing-input" placeholder="[Tự gõ lại cấu trúc switch-case]">`;
             })
             // 3. Cấu trúc try-catch
             .replace(/\btry\s*\{([^}]*)\}\s*catch\s*\(.*?\)\s*\{([^}]*)\}/gs, (match) => {
@@ -119,7 +119,7 @@
                 originalSnippets.push(fullBlock);
                 return `<input type="text" class="missing-input" placeholder="[Tự gõ lại khối lệnh else]">`;
             })
-            // 5. Vòng lặp for, while, và rẽ nhánh if, else if (bao gồm logic bên trong như a = a * i)
+            // 5. Vòng lặp for, while, và rẽ nhánh if, else if
             .replace(/\b(else\s+if|for|while|if)\s*\(.*?\)\s*\{([^}]*)\}/gs, (match) => {
                 let fullBlock = match.trim();
                 originalSnippets.push(fullBlock);
